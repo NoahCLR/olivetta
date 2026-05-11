@@ -37,13 +37,17 @@ const galleryConfig = {
 
 const homeGalleryItems = [
   { src: "/assets/images/casa/casa-05.webp", label: "Casa dei Cigni" },
-  { src: "/assets/images/casetta/casetta-03.webp", label: "La Casetta" },
-  { src: "/assets/images/omgeving/omgeving-05.webp", label: "Olivetta en omgeving" },
+  { src: "/assets/images/casa/casa-07.webp", label: "Casa dei Cigni" },
   { src: "/assets/images/casa/casa-22.webp", label: "Casa dei Cigni" },
+  { src: "/assets/images/casa/casa-28.webp", label: "Casa dei Cigni" },
   { src: "/assets/images/casetta/casetta-02.webp", label: "La Casetta" },
+  { src: "/assets/images/casetta/casetta-03.webp", label: "La Casetta" },
+  { src: "/assets/images/casetta/casetta-04.webp", label: "La Casetta" },
+  { src: "/assets/images/omgeving/olivetta-village.webp", label: "Olivetta en omgeving" },
   { src: "/assets/images/omgeving/omgeving-03.webp", label: "Olivetta en omgeving" },
-  { src: "/assets/images/casa/casa-13.webp", label: "Casa dei Cigni" },
-  { src: "/assets/images/omgeving/omgeving-06.webp", label: "Olivetta en omgeving" }
+  { src: "/assets/images/omgeving/omgeving-04.webp", label: "Olivetta en omgeving" },
+  { src: "/assets/images/omgeving/omgeving-06.webp", label: "Olivetta en omgeving" },
+  { src: "/assets/images/omgeving/omgeving-07.webp", label: "Olivetta en omgeving" }
 ];
 
 let gallerySets = {};
