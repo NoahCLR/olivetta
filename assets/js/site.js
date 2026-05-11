@@ -12,7 +12,7 @@ const pad = (number) => String(number).padStart(2, "0");
 
 const gallerySets = {
   casa: Array.from({ length: 29 }, (_, index) => ({
-    src: `assets/images/casa/casa-${pad(index)}.webp`,
+    src: `/assets/images/casa/casa-${pad(index)}.webp`,
     alt: `Casa dei Cigni foto ${index}`,
     caption: `Casa dei Cigni - foto ${index}`,
     className: index === 0 || index === 11 || index === 12 || index === 20 ? "wide" : index === 6 || index === 14 || index === 21 || index === 26 ? "tall" : ""
@@ -20,7 +20,7 @@ const gallerySets = {
   casetta: Array.from({ length: 10 }, (_, index) => {
     const photo = index + 1;
     return {
-      src: `assets/images/casetta/casetta-${pad(photo)}.webp`,
+      src: `/assets/images/casetta/casetta-${pad(photo)}.webp`,
       alt: `La Casetta foto ${photo}`,
       caption: `La Casetta - foto ${photo}`,
       className: photo === 1 || photo === 5 ? "wide" : photo === 2 ? "tall" : ""
@@ -29,7 +29,7 @@ const gallerySets = {
   omgeving: Array.from({ length: 8 }, (_, index) => {
     const photo = index + 1;
     return {
-      src: `assets/images/omgeving/omgeving-${pad(photo)}.webp`,
+      src: `/assets/images/omgeving/omgeving-${pad(photo)}.webp`,
       alt: `Olivetta en omgeving foto ${photo}`,
       caption: `Olivetta en omgeving - foto ${photo}`,
       className: photo === 4 || photo === 6 ? "wide" : photo === 1 || photo === 5 ? "tall" : ""
