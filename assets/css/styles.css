@@ -1024,16 +1024,62 @@ h3 {
 }
 
 .site-footer {
-  padding: 48px 36px;
+  padding: 56px 36px 48px;
   background: #172a23;
+  color: #fffaf1;
+}
+
+.site-footer .brand {
+  color: #fffaf1;
+}
+
+.site-footer .brand span {
+  color: #f3c8a8;
+}
+
+.footer-cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 32px;
+  align-items: end;
+  padding-bottom: 38px;
+  border-bottom: 1px solid rgba(255, 250, 241, 0.18);
+}
+
+.footer-cta .eyebrow {
+  margin-bottom: 12px;
+  color: #f3c8a8;
+}
+
+.footer-cta h2 {
+  max-width: 720px;
+  color: #fffaf1;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.footer-cta p:not(.eyebrow) {
+  max-width: 560px;
+  margin: 16px 0 0;
+}
+
+.footer-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.footer-cta-actions .button.secondary {
+  border-color: rgba(255, 250, 241, 0.42);
   color: #fffaf1;
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 36px;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, 0.34fr) minmax(180px, 0.34fr);
+  gap: 44px;
   align-items: start;
+  padding-top: 34px;
 }
 
 .site-footer p {
@@ -1041,16 +1087,39 @@ h3 {
   color: rgba(255, 250, 241, 0.72);
 }
 
+.footer-brand {
+  max-width: 420px;
+}
+
+.footer-place {
+  color: rgba(255, 250, 241, 0.56);
+  font-size: 0.92rem;
+}
+
 .footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
+  display: grid;
+  gap: 9px;
+}
+
+.footer-links h2 {
+  margin: 0 0 6px;
+  color: #f3c8a8;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .footer-links a {
   color: #fffaf1;
   font-weight: 800;
   text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #f3c8a8;
 }
 
 .lightbox {
@@ -1167,7 +1236,8 @@ h3 {
   .intro-grid.reverse,
   .quote-band .wrap,
   .weather-panel,
-  .map-layout {
+  .map-layout,
+  .footer-cta {
     grid-template-columns: 1fr;
   }
 
@@ -1184,6 +1254,10 @@ h3 {
 
   .gallery-grid {
     column-count: 2;
+  }
+
+  .footer-cta-actions {
+    justify-content: flex-start;
   }
 
   .weather-days {
@@ -1331,6 +1405,14 @@ h3 {
 
   .footer-grid {
     grid-template-columns: 1fr;
+  }
+
+  .footer-cta h2 {
+    font-size: clamp(1.9rem, 8vw, 2.35rem);
+  }
+
+  .footer-cta-actions {
+    flex-direction: column;
   }
 
   .lightbox {
