@@ -684,32 +684,199 @@ h3 {
 
 .availability {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.month {
-  min-height: 86px;
-  padding: 14px;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   background: #fffaf1;
+}
+
+.availability-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.availability-toggle {
+  display: inline-flex;
+  padding: 4px;
   border: 1px solid var(--line);
-  min-width: 0;
+  border-radius: var(--radius);
+  background: var(--paper);
 }
 
-.month strong,
-.month span {
-  display: block;
-}
-
-.month strong {
+.availability-toggle button {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
   color: var(--cypress);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 800;
 }
 
-.month span {
-  margin-top: 8px;
+.availability-toggle button.is-active {
+  background: var(--cypress);
+  color: #fffaf1;
+}
+
+.availability-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px 14px;
   color: var(--muted);
   font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.availability-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.legend-dot.available {
+  background: #eef4e8;
+}
+
+.legend-dot.option {
+  background: #f7d77b;
+  border-color: rgba(143, 104, 23, 0.42);
+}
+
+.legend-dot.booked {
+  background: #d77b6c;
+  border-color: rgba(126, 50, 35, 0.42);
+}
+
+.legend-dot.closed {
+  background: #c8c8c0;
+  border-color: rgba(72, 72, 66, 0.35);
+}
+
+.availability-status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.calendar-months {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.calendar-month {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fffdf8;
+}
+
+.calendar-month header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.calendar-month h3 {
+  margin: 0;
+  color: var(--cypress);
+  font-size: 1.08rem;
+}
+
+.calendar-month header span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.calendar-weekdays,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 6px;
+}
+
+.calendar-weekdays span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.calendar-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  min-width: 0;
+  border: 1px solid rgba(32, 35, 29, 0.08);
+  border-radius: 6px;
+  background: #eef4e8;
+  color: var(--cypress);
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.calendar-day.is-pad {
+  border-color: transparent;
+  background: transparent;
+}
+
+.calendar-day.is-booked {
+  background: #d77b6c;
+  color: #fffaf1;
+}
+
+.calendar-day.is-option {
+  background: #f7d77b;
+  color: #4f390b;
+}
+
+.calendar-day.is-closed {
+  background: #c8c8c0;
+  color: #36362f;
+}
+
+.calendar-day.is-past {
+  opacity: 0.45;
+}
+
+.calendar-day.is-today {
+  outline: 2px solid var(--sea);
+  outline-offset: 2px;
+}
+
+.calendar-empty {
+  margin: 0;
+  padding: 18px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  color: var(--muted);
+  text-align: center;
 }
 
 .map-layout {
@@ -938,8 +1105,8 @@ h3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .availability {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .calendar-months {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -1019,11 +1186,34 @@ h3 {
     text-align: right;
   }
 
+  .availability {
+    padding: 16px;
+  }
+
+  .availability-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .availability-toggle {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .availability-toggle button {
+    padding: 0 10px;
+  }
+
+  .availability-legend {
+    justify-content: flex-start;
+  }
+
   .detail-grid,
   .amenities,
   .gallery-grid,
   .weather-days,
-  .availability,
+  .calendar-months,
   .stat-grid {
     grid-template-columns: 1fr;
   }
