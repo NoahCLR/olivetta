@@ -126,3 +126,119 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft") moveLightbox(-1);
   if (event.key === "ArrowRight") moveLightbox(1);
 });
+
+const weatherWidget = document.querySelector("[data-weather-widget]");
+
+const weatherDescriptions = new Map([
+  [0, "Helder"],
+  [1, "Licht bewolkt"],
+  [2, "Half bewolkt"],
+  [3, "Bewolkt"],
+  [45, "Mist"],
+  [48, "Mist"],
+  [51, "Lichte motregen"],
+  [53, "Motregen"],
+  [55, "Motregen"],
+  [56, "IJzel"],
+  [57, "IJzel"],
+  [61, "Lichte regen"],
+  [63, "Regen"],
+  [65, "Veel regen"],
+  [66, "IJzel"],
+  [67, "IJzel"],
+  [71, "Lichte sneeuw"],
+  [73, "Sneeuw"],
+  [75, "Veel sneeuw"],
+  [77, "Sneeuwkorrels"],
+  [80, "Lichte buien"],
+  [81, "Buien"],
+  [82, "Felle buien"],
+  [85, "Sneeuwbuien"],
+  [86, "Sneeuwbuien"],
+  [95, "Onweer"],
+  [96, "Onweer met hagel"],
+  [99, "Onweer met hagel"]
+]);
+
+function roundedTemperature(value) {
+  if (typeof value !== "number") return "--&deg;";
+  return `${Math.round(value)}&deg;`;
+}
+
+function weatherLabel(code) {
+  return weatherDescriptions.get(code) || "Wisselend";
+}
+
+function formatForecastDay(date, index) {
+  if (index === 0) return "Vandaag";
+  if (index === 1) return "Morgen";
+  return new Intl.DateTimeFormat("nl-NL", { weekday: "short" }).format(new Date(`${date}T12:00:00`));
+}
+
+async function initWeatherWidget() {
+  if (!weatherWidget) return;
+
+  const status = weatherWidget.querySelector("[data-weather-status]");
+  const current = weatherWidget.querySelector("[data-weather-current]");
+  const days = weatherWidget.querySelector("[data-weather-days]");
+  const forecastUrl = new URL("https://api.open-meteo.com/v1/forecast");
+
+  forecastUrl.search = new URLSearchParams({
+    latitude: "43.879",
+    longitude: "7.516",
+    current: "temperature_2m,weather_code",
+    daily: "temperature_2m_max,temperature_2m_min,weather_code",
+    timezone: "Europe/Rome",
+    forecast_days: "5"
+  });
+
+  try {
+    const response = await fetch(forecastUrl);
+    if (!response.ok) throw new Error("Weather request failed");
+    const weather = await response.json();
+    const currentTemperature = weather.current?.temperature_2m;
+    const currentCode = weather.current?.weather_code;
+
+    if (typeof currentTemperature === "number" && current) {
+      current.innerHTML = `
+        <span>Nu</span>
+        <strong>${roundedTemperature(currentTemperature)}</strong>
+        <small>${weatherLabel(currentCode)}</small>
+      `;
+    }
+
+    const daily = weather.daily;
+    if (!daily?.time?.length || !days) throw new Error("Incomplete weather data");
+
+    days.innerHTML = daily.time.map((date, index) => {
+      const high = daily.temperature_2m_max[index];
+      const low = daily.temperature_2m_min[index];
+      const code = daily.weather_code[index];
+
+      return `
+        <article class="weather-day">
+          <span>${formatForecastDay(date, index)}</span>
+          <strong>${roundedTemperature(high)}</strong>
+          <small>${roundedTemperature(low)} laag - ${weatherLabel(code)}</small>
+        </article>
+      `;
+    }).join("");
+
+    if (status) {
+      status.textContent = "Live verwachting voor Olivetta San Michele, bijgewerkt via Open-Meteo.";
+    }
+  } catch (error) {
+    if (status) {
+      status.textContent = "De weerverwachting is tijdelijk niet beschikbaar. Probeer de pagina later opnieuw te laden.";
+    }
+    if (current) {
+      current.innerHTML = `
+        <span>Weer</span>
+        <strong>--&deg;</strong>
+        <small>Tijdelijk niet beschikbaar</small>
+      `;
+    }
+  }
+}
+
+initWeatherWidget();

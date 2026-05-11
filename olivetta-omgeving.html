@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Olivetta &amp; omgeving | Casa dei Cigni</title>
     <meta name="description" content="Ontdek Olivetta, het dal van de Bevera, wandelroutes, stranden, dorpen, musea en botanische tuinen rond Casa dei Cigni.">
-    <link rel="stylesheet" href="assets/css/styles.css?v=20260511">
+    <link rel="stylesheet" href="assets/css/styles.css?v=20260511-weather">
   </head>
   <body>
     <header class="site-header">
@@ -40,6 +40,33 @@
           </div>
           <div class="image-panel">
             <img src="assets/images/omgeving/olivetta-village.webp" alt="Olivetta tussen heuvels en olijfbomen">
+          </div>
+        </div>
+      </section>
+
+      <section class="section weather-section">
+        <div class="wrap weather-panel" data-weather-widget>
+          <div class="weather-copy">
+            <p class="eyebrow">Weer in Olivetta</p>
+            <h2>Temperatuur de komende dagen.</h2>
+            <p data-weather-status>Live verwachting voor Olivetta San Michele wordt geladen.</p>
+          </div>
+          <div class="weather-current" data-weather-current aria-live="polite">
+            <span>Nu</span>
+            <strong>--&deg;</strong>
+            <small>Bezig met laden</small>
+          </div>
+          <div class="weather-days" data-weather-days aria-label="Temperatuurverwachting komende dagen">
+            <article class="weather-day is-loading">
+              <span>Vandaag</span>
+              <strong>--&deg;</strong>
+              <small>--&deg;</small>
+            </article>
+            <article class="weather-day is-loading">
+              <span>Morgen</span>
+              <strong>--&deg;</strong>
+              <small>--&deg;</small>
+            </article>
           </div>
         </div>
       </section>
@@ -102,6 +129,6 @@
         </div>
       </div>
     </footer>
-    <script src="assets/js/site.js"></script>
+    <script src="assets/js/site.js?v=20260511-weather"></script>
   </body>
 </html>
