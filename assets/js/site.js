@@ -145,11 +145,17 @@ const availabilityCalendar = document.querySelector("[data-availability-calendar
 const availabilityUnits = {
   casa: {
     label: "Casa dei Cigni",
+    summary: "Vrijstaand huis voor maximaal 5-6 personen, te huur van april t/m oktober.",
+    image: "/assets/images/casa/casa-lead.webp",
+    imageAlt: "Casa dei Cigni met natuurstenen gevel en terras",
     seasonStartMonth: 3,
     seasonEndMonth: 9
   },
   casetta: {
     label: "La Casetta",
+    summary: "Vrij gelegen appartement voor 2 personen, te huur van juni t/m september.",
+    image: "/assets/images/casetta/casetta-lead.webp",
+    imageAlt: "La Casetta met overdekt terras in de tuin",
     seasonStartMonth: 5,
     seasonEndMonth: 8
   }
@@ -387,6 +393,9 @@ function initAvailabilityCalendar() {
   const unitButtons = availabilityCalendar.querySelectorAll("[data-availability-unit]");
   const yearLabel = availabilityCalendar.querySelector("[data-availability-year-label]");
   const yearButtons = availabilityCalendar.querySelectorAll("[data-availability-year-step]");
+  const unitImage = availabilityCalendar.querySelector("[data-availability-image]");
+  const unitTitle = availabilityCalendar.querySelector("[data-availability-title]");
+  const unitSummary = availabilityCalendar.querySelector("[data-availability-summary]");
   const firstSeasonYear = seasonYearForUnit("casa");
   const state = {
     activeUnit: "casa",
@@ -405,6 +414,13 @@ function initAvailabilityCalendar() {
     months.innerHTML = "";
 
     if (yearLabel) yearLabel.textContent = String(state.activeYear);
+    if (unitImage) {
+      unitImage.src = config?.image || "";
+      unitImage.alt = config?.imageAlt || "";
+    }
+    if (unitTitle) unitTitle.textContent = config?.label || "";
+    if (unitSummary) unitSummary.textContent = config?.summary || "";
+
     yearButtons.forEach((button) => {
       button.disabled = Number(button.dataset.availabilityYearStep) < 0 && state.activeYear <= firstSeasonYear;
     });
@@ -454,7 +470,7 @@ function initAvailabilityCalendar() {
     .then((payload) => {
       state.blocks = parseAvailabilityBlocks(normaliseGoogleSheetRows(payload));
       render();
-      setStatus("Actuele beschikbaarheid geladen. Dagen zonder blokkade staan als beschikbaar.");
+      setStatus("Gebruik de kalender om een passende periode te vinden; we bevestigen de beschikbaarheid graag per e-mail.");
     })
     .catch(() => {
       setStatus("De kalender kan tijdelijk niet worden geladen. Stuur ons gerust een e-mail voor de actuele beschikbaarheid.");
