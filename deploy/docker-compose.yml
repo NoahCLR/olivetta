@@ -1,0 +1,26 @@
+services:
+  casa-dei-cigni:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: casa-dei-cigni-site:latest
+    container_name: casa-dei-cigni-site
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - ncleroy-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+    # If cloudflared is not running in Docker, uncomment this and point the
+    # tunnel to http://127.0.0.1:8088 or http://<nas-lan-ip>:8088 instead.
+    # ports:
+    #   - "8088:80"
+
+networks:
+  ncleroy-net:
+    external: true
