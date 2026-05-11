@@ -133,19 +133,19 @@ a {
   position: relative;
   display: grid;
   align-items: end;
-  min-height: 78svh;
-  padding: 92px 36px 72px;
+  min-height: clamp(620px, 72svh, 860px);
+  padding: 92px max(36px, calc((100vw - 1480px) / 2)) 72px;
   background-image:
     linear-gradient(90deg, rgba(12, 25, 19, 0.72), rgba(12, 25, 19, 0.28) 48%, rgba(12, 25, 19, 0.08)),
     var(--hero-image);
-  background-position: center;
+  background-position: var(--hero-position, center);
   background-repeat: no-repeat;
   background-size: cover;
   color: #fffaf1;
 }
 
 .hero.compact {
-  min-height: 48svh;
+  min-height: clamp(500px, 44svh, 680px);
 }
 
 .hero-content {
@@ -787,6 +787,10 @@ h3 {
     min-height: 72svh;
     padding: 86px 22px 48px;
     background-position: center;
+  }
+
+  .hero.compact {
+    min-height: 58svh;
   }
 
   .section {
