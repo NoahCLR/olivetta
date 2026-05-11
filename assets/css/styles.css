@@ -283,6 +283,15 @@ h3 {
   font-size: 1.05rem;
 }
 
+.booking-cta {
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.booking-cta .actions {
+  margin-top: 22px;
+}
+
 .lead {
   color: var(--muted);
   font-size: clamp(1.08rem, 2vw, 1.22rem);
