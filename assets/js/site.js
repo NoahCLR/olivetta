@@ -10,42 +10,55 @@ if (navToggle && siteNav) {
 
 const pad = (number) => String(number).padStart(2, "0");
 
-const gallerySets = {
-  casa: Array.from({ length: 29 }, (_, index) => ({
-    src: `/assets/images/casa/casa-${pad(index)}.webp`,
-    alt: `Casa dei Cigni foto ${index}`,
-    caption: `Casa dei Cigni - foto ${index}`,
-    className: index === 0 || index === 11 || index === 12 || index === 20 ? "wide" : index === 6 || index === 14 || index === 21 || index === 26 ? "tall" : ""
-  })),
-  casetta: Array.from({ length: 10 }, (_, index) => {
-    const photo = index + 1;
-    return {
-      src: `/assets/images/casetta/casetta-${pad(photo)}.webp`,
-      alt: `La Casetta foto ${photo}`,
-      caption: `La Casetta - foto ${photo}`,
-      className: photo === 1 || photo === 5 ? "wide" : photo === 2 ? "tall" : ""
-    };
-  }),
-  omgeving: Array.from({ length: 8 }, (_, index) => {
-    const photo = index + 1;
-    return {
-      src: `/assets/images/omgeving/omgeving-${pad(photo)}.webp`,
-      alt: `Olivetta en omgeving foto ${photo}`,
-      caption: `Olivetta en omgeving - foto ${photo}`,
-      className: photo === 4 || photo === 6 ? "wide" : photo === 1 || photo === 5 ? "tall" : ""
-    };
-  })
+const galleryConfig = {
+  casa: {
+    folder: "casa",
+    prefix: "casa",
+    start: 0,
+    count: 29,
+    label: "Casa dei Cigni"
+  },
+  casetta: {
+    folder: "casetta",
+    prefix: "casetta",
+    start: 1,
+    count: 10,
+    label: "La Casetta"
+  },
+  omgeving: {
+    folder: "omgeving",
+    prefix: "omgeving",
+    start: 1,
+    count: 8,
+    label: "Olivetta en omgeving"
+  }
 };
+
+const gallerySets = Object.fromEntries(
+  Object.entries(galleryConfig).map(([name, config]) => [
+    name,
+    Array.from({ length: config.count }, (_, index) => {
+      const fileNumber = config.start + index;
+      const displayNumber = index + 1;
+
+      return {
+        src: `/assets/images/${config.folder}/${config.prefix}-${pad(fileNumber)}.webp`,
+        alt: `${config.label} foto ${displayNumber}`,
+        caption: `${config.label} - foto ${displayNumber}`
+      };
+    })
+  ])
+);
 
 document.querySelectorAll("[data-gallery-set]").forEach((grid) => {
   const name = grid.dataset.gallerySet;
   const items = gallerySets[name] || [];
   const limit = Number(grid.dataset.limit || items.length);
+  const visibleItems = items.slice(0, limit);
 
-  items.slice(0, limit).forEach((item, index) => {
+  visibleItems.forEach((item, index) => {
     const link = document.createElement("a");
     link.href = item.src;
-    link.className = item.className;
     link.dataset.galleryName = name;
     link.dataset.galleryIndex = String(index);
     link.dataset.caption = item.caption;
