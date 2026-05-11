@@ -1,0 +1,205 @@
+{
+  "_uitleg": "Beheer hier fototeksten per afbeeldingspad. Gebruik alt voor toegankelijkheid en SEO. Caption is optioneel en wordt gebruikt in de fotoweergave. Ontbreekt een foto, dan gebruikt de site automatisch een fallbacktekst.",
+  "images": {
+    "/assets/images/casa/casa-00.webp": {
+      "alt": "Oprit door olijfbomen naar Casa dei Cigni in de heuvels bij Olivetta",
+      "caption": "Casa dei Cigni tussen olijfbomen en bergen"
+    },
+    "/assets/images/casa/casa-01.webp": {
+      "alt": "Natuurstenen gevel van Casa dei Cigni tussen de olijfbomen",
+      "caption": "Natuurstenen huis tussen de olijfbomen"
+    },
+    "/assets/images/casa/casa-02.webp": {
+      "alt": "Casa dei Cigni gezien vanaf de tuin met natuurstenen muren en groen",
+      "caption": "Het huis gezien vanuit de tuin"
+    },
+    "/assets/images/casa/casa-03.webp": {
+      "alt": "Terras met bloemen en uitzicht op de bergen bij Casa dei Cigni",
+      "caption": "Terras met uitzicht op de bergen"
+    },
+    "/assets/images/casa/casa-04.webp": {
+      "alt": "Uitzicht vanaf Casa dei Cigni over het groene dal van de Bevera",
+      "caption": "Uitzicht over het dal"
+    },
+    "/assets/images/casa/casa-05.webp": {
+      "alt": "Avondterras naast de natuurstenen gevel van Casa dei Cigni",
+      "caption": "Avondterras bij Casa dei Cigni"
+    },
+    "/assets/images/casa/casa-06.webp": {
+      "alt": "Overdekt terras met zitplek in de schaduw bij Casa dei Cigni",
+      "caption": "Overdekt terras in de schaduw"
+    },
+    "/assets/images/casa/casa-07.webp": {
+      "alt": "Tuinpad met planten langs de natuurstenen gevel van Casa dei Cigni",
+      "caption": "Tuinpad langs het huis"
+    },
+    "/assets/images/casa/casa-08.webp": {
+      "alt": "Tuintafel onder een olijfboom bij Casa dei Cigni",
+      "caption": "Tuintafel onder de olijfboom"
+    },
+    "/assets/images/casa/casa-09.webp": {
+      "alt": "Olijfbomen en groen rondom de tuin van Casa dei Cigni",
+      "caption": "Groen rondom de tuin"
+    },
+    "/assets/images/casa/casa-10.webp": {
+      "alt": "Rustige zitplek in de tuin met bloeiende planten bij Casa dei Cigni",
+      "caption": "Zitplek in de tuin"
+    },
+    "/assets/images/casa/casa-11.webp": {
+      "alt": "Casa dei Cigni naast het waterkanaal en de natuur rondom het huis",
+      "caption": "Het huis naast het waterkanaal"
+    },
+    "/assets/images/casa/casa-12.webp": {
+      "alt": "Woonkamer van Casa dei Cigni met bank en houten kast",
+      "caption": "Woonkamer met zithoek"
+    },
+    "/assets/images/casa/casa-13.webp": {
+      "alt": "Boogkamer met zithoek en houtkachel in Casa dei Cigni",
+      "caption": "Boogkamer met houtkachel"
+    },
+    "/assets/images/casa/casa-14.webp": {
+      "alt": "Boogkamer met kast en decoratie in Casa dei Cigni",
+      "caption": "Boogkamer met oude muren"
+    },
+    "/assets/images/casa/casa-15.webp": {
+      "alt": "Eettafel in de woonkamer van Casa dei Cigni",
+      "caption": "Eettafel in de woonkamer"
+    },
+    "/assets/images/casa/casa-16.webp": {
+      "alt": "Binnenruimte met boogdoorgang in Casa dei Cigni",
+      "caption": "Boogdoorgang in het huis"
+    },
+    "/assets/images/casa/casa-17.webp": {
+      "alt": "Keuken met gasfornuis en houten werkblad in Casa dei Cigni",
+      "caption": "Keuken met gasfornuis"
+    },
+    "/assets/images/casa/casa-18.webp": {
+      "alt": "Slaapkamerhoek met spiegel en stoel in Casa dei Cigni",
+      "caption": "Slaapkamerhoek"
+    },
+    "/assets/images/casa/casa-19.webp": {
+      "alt": "Slaapkamer met twee aparte bedden in Casa dei Cigni",
+      "caption": "Slaapkamer met twee aparte bedden"
+    },
+    "/assets/images/casa/casa-20.webp": {
+      "alt": "Slaapkamer met tweepersoonsbed en houten balken in Casa dei Cigni",
+      "caption": "Slaapkamer met tweepersoonsbed"
+    },
+    "/assets/images/casa/casa-21.webp": {
+      "alt": "Hal met kastje en doorgang naar badkamer in Casa dei Cigni",
+      "caption": "Hal naar de badkamer"
+    },
+    "/assets/images/casa/casa-22.webp": {
+      "alt": "Dakterras met stoelen en uitzicht bij Casa dei Cigni",
+      "caption": "Dakterras met uitzicht"
+    },
+    "/assets/images/casa/casa-23.webp": {
+      "alt": "Uitzicht vanaf Casa dei Cigni over Olivetta en de bergen",
+      "caption": "Uitzicht richting Olivetta"
+    },
+    "/assets/images/casa/casa-24.webp": {
+      "alt": "Slaapkamer met tweepersoonsbed en deur naar buiten in Casa dei Cigni",
+      "caption": "Slaapkamer met deur naar buiten"
+    },
+    "/assets/images/casa/casa-25.webp": {
+      "alt": "Tweepersoonsbed met metalen bedframe in Casa dei Cigni",
+      "caption": "Tweepersoonsbed"
+    },
+    "/assets/images/casa/casa-26.webp": {
+      "alt": "Badkamermeubel met wastafel en spiegels in Casa dei Cigni",
+      "caption": "Badkamer met wastafel"
+    },
+    "/assets/images/casa/casa-27.webp": {
+      "alt": "Wandelpad door het groen rond Casa dei Cigni",
+      "caption": "Pad door het groen"
+    },
+    "/assets/images/casa/casa-28.webp": {
+      "alt": "Bloeiende tuin met cipres en olijfbomen bij Casa dei Cigni",
+      "caption": "Bloeiende tuin bij het huis"
+    },
+    "/assets/images/casa/casa-lead.webp": {
+      "alt": "Casa dei Cigni met natuurstenen gevel en terras",
+      "caption": "Casa dei Cigni"
+    },
+    "/assets/images/casetta/casetta-01.webp": {
+      "alt": "La Casetta vrij in de tuin met overdekt terras en bergen op de achtergrond",
+      "caption": "La Casetta in de tuin"
+    },
+    "/assets/images/casetta/casetta-02.webp": {
+      "alt": "Avondlicht bij het overdekte terras van La Casetta",
+      "caption": "Overdekt terras in de avond"
+    },
+    "/assets/images/casetta/casetta-03.webp": {
+      "alt": "Terras van La Casetta met tafel en uitzicht op de tuin",
+      "caption": "Terras met uitzicht op de tuin"
+    },
+    "/assets/images/casetta/casetta-04.webp": {
+      "alt": "Bloeiende irissen in de tuin bij La Casetta",
+      "caption": "Bloemen in de tuin"
+    },
+    "/assets/images/casetta/casetta-05.webp": {
+      "alt": "Open woonruimte van La Casetta met keuken, zithoek en bed",
+      "caption": "Woonruimte met keuken en bed"
+    },
+    "/assets/images/casetta/casetta-06.webp": {
+      "alt": "La Casetta interieur met tweepersoonsbed en keukentje",
+      "caption": "Interieur van La Casetta"
+    },
+    "/assets/images/casetta/casetta-07.webp": {
+      "alt": "Keuken en eettafel in La Casetta",
+      "caption": "Keuken en eettafel"
+    },
+    "/assets/images/casetta/casetta-08.webp": {
+      "alt": "Glazen deur van La Casetta met zicht op het terras en de tuin",
+      "caption": "Zicht naar terras en tuin"
+    },
+    "/assets/images/casetta/casetta-09.webp": {
+      "alt": "Groene tuin rond La Casetta met fruitbomen en olijfbomen",
+      "caption": "Groene tuin rond La Casetta"
+    },
+    "/assets/images/casetta/casetta-10.webp": {
+      "alt": "Olijfgaard en open tuin bij La Casetta",
+      "caption": "Olijfgaard bij La Casetta"
+    },
+    "/assets/images/casetta/casetta-lead.webp": {
+      "alt": "La Casetta met overdekt terras in de tuin",
+      "caption": "La Casetta"
+    },
+    "/assets/images/omgeving/omgeving-01.webp": {
+      "alt": "Uitzicht over het dal en de bergen rond Olivetta",
+      "caption": "Uitzicht over het dal"
+    },
+    "/assets/images/omgeving/omgeving-02.webp": {
+      "alt": "Rivier de Bevera tussen rotsen en groen bij Olivetta",
+      "caption": "De Bevera tussen de rotsen"
+    },
+    "/assets/images/omgeving/omgeving-03.webp": {
+      "alt": "Kleine waterval en helder water in de omgeving van Olivetta",
+      "caption": "Waterval in de omgeving"
+    },
+    "/assets/images/omgeving/omgeving-04.webp": {
+      "alt": "Botanische tuin aan de kust met cipressen en zeezicht",
+      "caption": "Tuin aan de kust"
+    },
+    "/assets/images/omgeving/omgeving-05.webp": {
+      "alt": "Dorpskern van Olivetta in het dal van de Bevera",
+      "caption": "Olivetta in het dal"
+    },
+    "/assets/images/omgeving/omgeving-06.webp": {
+      "alt": "Rotsachtige kust en blauwe zee bij de Middellandse Zee",
+      "caption": "Kust aan de Middellandse Zee"
+    },
+    "/assets/images/omgeving/omgeving-07.webp": {
+      "alt": "Pad langs de blauwe zee en het groen aan de kust",
+      "caption": "Wandelen langs de kust"
+    },
+    "/assets/images/omgeving/omgeving-08.webp": {
+      "alt": "Boulevard met palmen en kleurige gevels aan de kust",
+      "caption": "Kustplaats met palmen"
+    },
+    "/assets/images/omgeving/olivetta-village.webp": {
+      "alt": "Olivetta San Michele tegen de groene berghelling",
+      "caption": "Olivetta San Michele"
+    }
+  }
+}

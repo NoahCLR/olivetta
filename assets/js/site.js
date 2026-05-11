@@ -9,6 +9,7 @@ if (navToggle && siteNav) {
 }
 
 const pad = (number) => String(number).padStart(2, "0");
+const photoTextPath = "/assets/data/photo-alt-texts.json";
 
 const galleryConfig = {
   casa: {
@@ -34,45 +35,109 @@ const galleryConfig = {
   }
 };
 
-const gallerySets = Object.fromEntries(
-  Object.entries(galleryConfig).map(([name, config]) => [
-    name,
-    Array.from({ length: config.count }, (_, index) => {
-      const fileNumber = config.start + index;
-      const displayNumber = index + 1;
+const homeGalleryItems = [
+  { src: "/assets/images/casa/casa-05.webp", label: "Casa dei Cigni" },
+  { src: "/assets/images/casetta/casetta-03.webp", label: "La Casetta" },
+  { src: "/assets/images/omgeving/omgeving-05.webp", label: "Olivetta en omgeving" },
+  { src: "/assets/images/casa/casa-22.webp", label: "Casa dei Cigni" },
+  { src: "/assets/images/casetta/casetta-02.webp", label: "La Casetta" },
+  { src: "/assets/images/omgeving/omgeving-03.webp", label: "Olivetta en omgeving" },
+  { src: "/assets/images/casa/casa-13.webp", label: "Casa dei Cigni" },
+  { src: "/assets/images/omgeving/omgeving-06.webp", label: "Olivetta en omgeving" }
+];
 
-      return {
-        src: `/assets/images/${config.folder}/${config.prefix}-${pad(fileNumber)}.webp`,
-        alt: `${config.label} foto ${displayNumber}`,
-        caption: `${config.label} - foto ${displayNumber}`
-      };
-    })
-  ])
-);
+let gallerySets = {};
 
-document.querySelectorAll("[data-gallery-set]").forEach((grid) => {
-  const name = grid.dataset.gallerySet;
-  const items = gallerySets[name] || [];
-  const limit = Number(grid.dataset.limit || items.length);
-  const visibleItems = items.slice(0, limit);
+function fallbackPhotoText(item) {
+  if (item.displayNumber) return `${item.label} foto ${item.displayNumber}`;
+  return item.label || "Foto van Casa dei Cigni Olivetta";
+}
 
-  visibleItems.forEach((item, index) => {
-    const link = document.createElement("a");
-    link.href = item.src;
-    link.dataset.galleryName = name;
-    link.dataset.galleryIndex = String(index);
-    link.dataset.caption = item.caption;
-    link.setAttribute("aria-label", item.caption);
+function applyPhotoText(item, photoTexts) {
+  const configuredText = photoTexts[item.src] || {};
+  const fallback = fallbackPhotoText(item);
 
-    const image = document.createElement("img");
-    image.src = item.src;
-    image.alt = item.alt;
-    image.loading = "lazy";
-    image.decoding = "async";
+  return {
+    ...item,
+    alt: configuredText.alt || item.alt || fallback,
+    caption: configuredText.caption || configuredText.alt || item.caption || fallback
+  };
+}
 
-    link.append(image);
-    grid.append(link);
+function buildNumberedGallery(config, photoTexts) {
+  return Array.from({ length: config.count }, (_, index) => {
+    const fileNumber = config.start + index;
+    const displayNumber = index + 1;
+
+    return applyPhotoText({
+      src: `/assets/images/${config.folder}/${config.prefix}-${pad(fileNumber)}.webp`,
+      label: config.label,
+      displayNumber
+    }, photoTexts);
   });
+}
+
+function buildGallerySets(photoTexts) {
+  const sets = Object.fromEntries(
+    Object.entries(galleryConfig).map(([name, config]) => [
+      name,
+      buildNumberedGallery(config, photoTexts)
+    ])
+  );
+
+  sets.home = homeGalleryItems.map((item, index) => applyPhotoText({
+    ...item,
+    displayNumber: index + 1
+  }, photoTexts));
+
+  return sets;
+}
+
+async function loadPhotoTexts() {
+  try {
+    const response = await fetch(photoTextPath, { cache: "no-store" });
+    if (!response.ok) throw new Error("Photo text file not available");
+    const data = await response.json();
+    return data.images || {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function renderGalleries() {
+  document.querySelectorAll("[data-gallery-set]").forEach((grid) => {
+    const name = grid.dataset.gallerySet;
+    const items = gallerySets[name] || [];
+    const limit = Number(grid.dataset.limit || items.length);
+    const visibleItems = items.slice(0, limit);
+
+    grid.innerHTML = "";
+
+    visibleItems.forEach((item, index) => {
+      const link = document.createElement("a");
+      link.href = item.src;
+      link.dataset.galleryName = name;
+      link.dataset.galleryIndex = String(index);
+      link.dataset.caption = item.caption;
+      link.setAttribute("aria-label", item.caption);
+
+      const image = document.createElement("img");
+      image.src = item.src;
+      image.alt = item.alt;
+      image.loading = "lazy";
+      image.decoding = "async";
+
+      link.append(image);
+      grid.append(link);
+    });
+  });
+}
+
+gallerySets = buildGallerySets({});
+renderGalleries();
+loadPhotoTexts().then((photoTexts) => {
+  gallerySets = buildGallerySets(photoTexts);
+  renderGalleries();
 });
 
 const lightbox = document.createElement("div");
