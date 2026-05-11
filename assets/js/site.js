@@ -372,8 +372,12 @@ function initAvailabilityCalendar() {
   const status = availabilityCalendar.querySelector("[data-availability-status]");
   const months = availabilityCalendar.querySelector("[data-availability-months]");
   const unitButtons = availabilityCalendar.querySelectorAll("[data-availability-unit]");
+  const yearLabel = availabilityCalendar.querySelector("[data-availability-year-label]");
+  const yearButtons = availabilityCalendar.querySelectorAll("[data-availability-year-step]");
+  const firstSeasonYear = seasonYearForUnit("casa");
   const state = {
     activeUnit: "casa",
+    activeYear: firstSeasonYear,
     blocks: []
   };
 
@@ -384,9 +388,13 @@ function initAvailabilityCalendar() {
   function render() {
     if (!months) return;
     const config = availabilityUnits[state.activeUnit];
-    const year = seasonYearForUnit(state.activeUnit);
     const todayDay = dayNumberFromDate(new Date());
     months.innerHTML = "";
+
+    if (yearLabel) yearLabel.textContent = String(state.activeYear);
+    yearButtons.forEach((button) => {
+      button.disabled = Number(button.dataset.availabilityYearStep) < 0 && state.activeYear <= firstSeasonYear;
+    });
 
     if (!config) {
       const empty = document.createElement("p");
@@ -397,7 +405,7 @@ function initAvailabilityCalendar() {
     }
 
     for (let month = config.seasonStartMonth; month <= config.seasonEndMonth; month += 1) {
-      months.append(buildMonthElement(state.activeUnit, year, month, state.blocks, todayDay));
+      months.append(buildMonthElement(state.activeUnit, state.activeYear, month, state.blocks, todayDay));
     }
   }
 
@@ -409,6 +417,15 @@ function initAvailabilityCalendar() {
         item.classList.toggle("is-active", isActive);
         item.setAttribute("aria-selected", String(isActive));
       });
+      render();
+    });
+  });
+
+  yearButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const step = Number(button.dataset.availabilityYearStep);
+      if (!Number.isFinite(step)) return;
+      state.activeYear = Math.max(firstSeasonYear, state.activeYear + step);
       render();
     });
   });

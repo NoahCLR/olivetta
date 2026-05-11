@@ -724,6 +724,53 @@ h3 {
   color: #fffaf1;
 }
 
+.availability-year {
+  display: inline-grid;
+  grid-template-columns: 40px minmax(82px, auto) 40px;
+  align-items: center;
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.availability-year button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 48px;
+  border: 0;
+  background: transparent;
+  color: var(--cypress);
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.45rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.availability-year button:hover {
+  background: rgba(31, 58, 47, 0.08);
+}
+
+.availability-year button:disabled {
+  color: rgba(98, 105, 95, 0.38);
+  cursor: not-allowed;
+}
+
+.availability-year button:disabled:hover {
+  background: transparent;
+}
+
+.availability-year strong {
+  min-width: 82px;
+  color: var(--cypress);
+  font-size: 0.94rem;
+  font-weight: 900;
+  text-align: center;
+}
+
 .availability-legend {
   display: flex;
   flex-wrap: wrap;
@@ -1203,6 +1250,15 @@ h3 {
 
   .availability-toggle button {
     padding: 0 10px;
+  }
+
+  .availability-year {
+    width: 100%;
+    grid-template-columns: 46px minmax(0, 1fr) 46px;
+  }
+
+  .availability-year button {
+    width: 46px;
   }
 
   .availability-legend {
