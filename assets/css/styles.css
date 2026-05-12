@@ -46,6 +46,21 @@ a {
   color: inherit;
 }
 
+.intro-text a,
+.detail-box a,
+.route-item a {
+  color: var(--sea);
+  font-weight: 800;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+
+.intro-text a:hover,
+.detail-box a:hover,
+.route-item a:hover {
+  color: var(--terracotta);
+}
+
 .site-header {
   position: sticky;
   top: 0;
