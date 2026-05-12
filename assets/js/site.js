@@ -1039,3 +1039,26 @@ async function initWeatherWidget() {
 }
 
 initWeatherWidget();
+
+const backToTop = document.createElement("button");
+backToTop.className = "back-to-top";
+backToTop.type = "button";
+backToTop.textContent = "\u2191";
+backToTop.setAttribute("aria-label", "Terug naar boven");
+backToTop.title = "Terug naar boven";
+document.body.append(backToTop);
+
+function updateBackToTop() {
+  backToTop.classList.toggle("is-visible", window.scrollY > 640);
+}
+
+backToTop.addEventListener("click", () => {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({
+    top: 0,
+    behavior: prefersReducedMotion ? "auto" : "smooth"
+  });
+});
+
+window.addEventListener("scroll", updateBackToTop, { passive: true });
+updateBackToTop();
