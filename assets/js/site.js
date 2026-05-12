@@ -653,6 +653,7 @@ function buildMonthElement(unit, year, month, blocks, todayDay, selection, canSe
         dayElement.title = `Kies ${calendarDateFormatter.format(date)} als vertrek`;
         dayElement.setAttribute("aria-label", dayElement.title);
       } else {
+        dayElement.classList.add("is-arrival-option");
         dayElement.title = `Kies ${calendarDateFormatter.format(date)} als aankomst`;
         dayElement.setAttribute("aria-label", dayElement.title);
       }
