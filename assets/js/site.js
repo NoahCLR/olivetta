@@ -260,6 +260,7 @@ const calendarWeekdays = ["ma", "di", "wo", "do", "vr", "za", "zo"];
 const calendarDayMs = 24 * 60 * 60 * 1000;
 const calendarMonthFormatter = new Intl.DateTimeFormat("nl-NL", { month: "long", year: "numeric", timeZone: "UTC" });
 const calendarDateFormatter = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+const calendarSelectionFormatter = new Intl.DateTimeFormat("nl-NL", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
 function capitalise(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
@@ -271,6 +272,26 @@ function dayNumber(year, month, day) {
 
 function dayNumberFromDate(date) {
   return dayNumber(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function dateFromDayNumber(day) {
+  return new Date(day * calendarDayMs);
+}
+
+function isSaturdayDay(day) {
+  return dateFromDayNumber(day).getUTCDay() === 6;
+}
+
+function formatSelectionDate(day) {
+  return capitalise(calendarSelectionFormatter.format(dateFromDayNumber(day)));
+}
+
+function isRangeAvailable(blocks, unit, startDay, endDay) {
+  for (let day = startDay; day < endDay; day += 1) {
+    if (statusForDay(blocks, unit, day) !== "available") return false;
+  }
+
+  return true;
 }
 
 function parseAvailabilityDate(value) {
@@ -563,7 +584,7 @@ function seasonYearForUnit(unit) {
   return today.getMonth() > config.seasonEndMonth ? today.getFullYear() + 1 : today.getFullYear();
 }
 
-function buildMonthElement(unit, year, month, blocks, todayDay) {
+function buildMonthElement(unit, year, month, blocks, todayDay, selection, canSelect) {
   const config = availabilityUnits[unit];
   const monthDate = new Date(Date.UTC(year, month, 1));
   const monthElement = document.createElement("article");
@@ -600,14 +621,48 @@ function buildMonthElement(unit, year, month, blocks, todayDay) {
     const currentDay = dayNumber(year, month, day);
     const status = statusForDay(blocks, unit, currentDay);
     const date = new Date(Date.UTC(year, month, day));
-    const dayElement = document.createElement("span");
+    const isPast = currentDay < todayDay;
+    const selectedStart = selection.startDay === currentDay;
+    const selectedEnd = selection.endDay === currentDay;
+    const selectedRange = selection.startDay !== null && selection.endDay !== null && currentDay > selection.startDay && currentDay < selection.endDay;
+    const choosingDeparture = selection.startDay !== null && selection.endDay === null;
+    const selectableArrival = canSelect &&
+      isSaturdayDay(currentDay) &&
+      !isPast &&
+      status === "available" &&
+      (!choosingDeparture || currentDay <= selection.startDay);
+    const selectableDeparture = canSelect &&
+      choosingDeparture &&
+      currentDay > selection.startDay &&
+      isSaturdayDay(currentDay) &&
+      isRangeAvailable(blocks, unit, selection.startDay, currentDay);
+    const isSelectable = selectableArrival || selectableDeparture || selectedStart;
+    const dayElement = document.createElement(isSelectable ? "button" : "span");
     dayElement.className = `calendar-day is-${status}`;
     dayElement.textContent = String(day);
     dayElement.title = `${calendarDateFormatter.format(date)}: ${availabilityStatusLabels[status]}`;
     dayElement.setAttribute("aria-label", dayElement.title);
 
-    if (currentDay < todayDay) dayElement.classList.add("is-past");
+    if (isSelectable) {
+      dayElement.type = "button";
+      dayElement.dataset.availabilityDay = String(currentDay);
+      dayElement.classList.add("is-selectable");
+
+      if (selectableDeparture && !selectableArrival) {
+        dayElement.classList.add("is-checkout-option");
+        dayElement.title = `Kies ${calendarDateFormatter.format(date)} als vertrek`;
+        dayElement.setAttribute("aria-label", dayElement.title);
+      } else {
+        dayElement.title = `Kies ${calendarDateFormatter.format(date)} als aankomst`;
+        dayElement.setAttribute("aria-label", dayElement.title);
+      }
+    }
+
+    if (isPast) dayElement.classList.add("is-past");
     if (currentDay === todayDay) dayElement.classList.add("is-today");
+    if (selectedRange) dayElement.classList.add("is-selected-range");
+    if (selectedStart) dayElement.classList.add("is-selected-start");
+    if (selectedEnd) dayElement.classList.add("is-selected-end");
 
     days.append(dayElement);
   }
@@ -628,15 +683,144 @@ function initAvailabilityCalendar() {
   const unitImage = availabilityCalendar.querySelector("[data-availability-image]");
   const unitTitle = availabilityCalendar.querySelector("[data-availability-title]");
   const unitSummary = availabilityCalendar.querySelector("[data-availability-summary]");
+  const selectionMessage = availabilityCalendar.querySelector("[data-availability-selection-message]");
+  const arrivalLabel = availabilityCalendar.querySelector("[data-availability-arrival]");
+  const departureLabel = availabilityCalendar.querySelector("[data-availability-departure]");
+  const requestLink = availabilityCalendar.querySelector("[data-availability-request-link]");
+  const clearButton = availabilityCalendar.querySelector("[data-availability-clear]");
   const firstSeasonYear = seasonYearForUnit("casa");
+  const genericRequestHref = requestLink?.getAttribute("href") || "mailto:roderik.westra@gmail.com,noekzwaan@gmail.com?subject=Vraag%20over%20beschikbaarheid%20in%20Olivetta";
   const state = {
     activeUnit: "casa",
     activeYear: firstSeasonYear,
-    blocks: []
+    blocks: [],
+    isLoaded: false,
+    notice: "",
+    selection: {
+      startDay: null,
+      endDay: null
+    }
   };
 
   function setStatus(message) {
     if (status) status.textContent = message;
+  }
+
+  function resetSelection() {
+    state.notice = "";
+    state.selection.startDay = null;
+    state.selection.endDay = null;
+  }
+
+  function buildRequestHref() {
+    if (state.selection.startDay === null || state.selection.endDay === null) return genericRequestHref;
+
+    const unitLabel = availabilityUnits[state.activeUnit]?.label || "Olivetta";
+    const arrival = formatSelectionDate(state.selection.startDay);
+    const departure = formatSelectionDate(state.selection.endDay);
+    const nights = state.selection.endDay - state.selection.startDay;
+    const subject = `Vraag over beschikbaarheid ${unitLabel}`;
+    const body = [
+      "Beste Roderik en Noek,",
+      "",
+      `We willen graag informeren naar de beschikbaarheid van ${unitLabel}.`,
+      "",
+      `Aankomst: ${arrival}`,
+      `Vertrek: ${departure}`,
+      `Aantal nachten: ${nights}`,
+      "",
+      "Met vriendelijke groet,"
+    ].join("\n");
+
+    return `mailto:roderik.westra@gmail.com,noekzwaan@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+
+  function updateSelectionPanel() {
+    const hasStart = state.selection.startDay !== null;
+    const hasEnd = state.selection.endDay !== null;
+
+    if (arrivalLabel) arrivalLabel.textContent = hasStart ? formatSelectionDate(state.selection.startDay) : "--";
+    if (departureLabel) departureLabel.textContent = hasEnd ? formatSelectionDate(state.selection.endDay) : "--";
+
+    if (requestLink) {
+      const canRequest = hasStart && hasEnd;
+      requestLink.href = buildRequestHref();
+      requestLink.classList.toggle("is-disabled", !canRequest);
+      requestLink.setAttribute("aria-disabled", String(!canRequest));
+      requestLink.tabIndex = canRequest ? 0 : -1;
+    }
+
+    if (clearButton) clearButton.disabled = !hasStart;
+
+    if (!selectionMessage) return;
+
+    if (!state.isLoaded) {
+      selectionMessage.textContent = "Beschikbaarheid wordt geladen. Daarna kun je een periode kiezen.";
+    } else if (state.notice) {
+      selectionMessage.textContent = state.notice;
+    } else if (hasStart && hasEnd) {
+      const nights = state.selection.endDay - state.selection.startDay;
+      selectionMessage.textContent = `Geselecteerde periode: ${nights} nachten. De aanvraag wordt per e-mail bevestigd.`;
+    } else if (hasStart) {
+      selectionMessage.textContent = "Aankomst gekozen. Kies een latere zaterdag als vertrek; meerdere weken kan ook.";
+    } else {
+      selectionMessage.textContent = "Kies een beschikbare zaterdag als aankomst en daarna een zaterdag als vertrek.";
+    }
+  }
+
+  function selectCalendarDay(day) {
+    const todayDay = dayNumberFromDate(new Date());
+    const statusForSelectedDay = statusForDay(state.blocks, state.activeUnit, day);
+
+    state.notice = "";
+
+    if (!state.isLoaded) {
+      state.notice = "Wacht even tot de actuele beschikbaarheid geladen is.";
+      updateSelectionPanel();
+      return;
+    }
+
+    if (!isSaturdayDay(day)) return;
+
+    if (day < todayDay) {
+      state.notice = "Kies een toekomstige zaterdag.";
+      updateSelectionPanel();
+      return;
+    }
+
+    if (state.selection.startDay === day && state.selection.endDay === null) {
+      resetSelection();
+      render();
+      return;
+    }
+
+    if (state.selection.startDay === null || state.selection.endDay !== null || day < state.selection.startDay) {
+      if (statusForSelectedDay !== "available") {
+        state.notice = "Kies een groene zaterdag als aankomst.";
+        updateSelectionPanel();
+        return;
+      }
+
+      state.selection.startDay = day;
+      state.selection.endDay = null;
+      render();
+      return;
+    }
+
+    if (day <= state.selection.startDay) {
+      state.notice = "Kies een latere zaterdag als vertrek.";
+      updateSelectionPanel();
+      return;
+    }
+
+    if (!isRangeAvailable(state.blocks, state.activeUnit, state.selection.startDay, day)) {
+      state.notice = "Deze periode is niet volledig beschikbaar. Kies een andere zaterdag.";
+      render();
+      return;
+    }
+
+    state.selection.endDay = day;
+    render();
   }
 
   function render() {
@@ -666,13 +850,16 @@ function initAvailabilityCalendar() {
     }
 
     for (let month = config.seasonStartMonth; month <= config.seasonEndMonth; month += 1) {
-      months.append(buildMonthElement(state.activeUnit, state.activeYear, month, state.blocks, todayDay));
+      months.append(buildMonthElement(state.activeUnit, state.activeYear, month, state.blocks, todayDay, state.selection, state.isLoaded));
     }
+
+    updateSelectionPanel();
   }
 
   unitButtons.forEach((button) => {
     button.addEventListener("click", () => {
       state.activeUnit = button.dataset.availabilityUnit;
+      resetSelection();
       unitButtons.forEach((item) => {
         const isActive = item === button;
         item.classList.toggle("is-active", isActive);
@@ -687,9 +874,25 @@ function initAvailabilityCalendar() {
       const step = Number(button.dataset.availabilityYearStep);
       if (!Number.isFinite(step)) return;
       state.activeYear = Math.max(firstSeasonYear, state.activeYear + step);
+      resetSelection();
       render();
     });
   });
+
+  if (months) {
+    months.addEventListener("click", (event) => {
+      const dayButton = event.target.closest("[data-availability-day]");
+      if (!dayButton || !months.contains(dayButton)) return;
+      selectCalendarDay(Number(dayButton.dataset.availabilityDay));
+    });
+  }
+
+  if (clearButton) {
+    clearButton.addEventListener("click", () => {
+      resetSelection();
+      render();
+    });
+  }
 
   render();
 
@@ -705,10 +908,14 @@ function initAvailabilityCalendar() {
   ])
     .then((payload) => {
       state.blocks = parseAvailabilityBlocks(normaliseGoogleSheetRows(payload));
+      state.isLoaded = true;
       render();
       setStatus("Gebruik de kalender om een passende periode te vinden; we bevestigen de beschikbaarheid graag per e-mail.");
     })
     .catch(() => {
+      state.isLoaded = false;
+      resetSelection();
+      render();
       setStatus("De kalender kan tijdelijk niet worden geladen. Stuur ons gerust een e-mail voor de actuele beschikbaarheid.");
     });
 }
