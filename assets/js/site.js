@@ -249,6 +249,13 @@ const availabilityStatusPriority = {
   closed: 3
 };
 
+const pricingTable = document.querySelector("[data-pricing-table]");
+const priceFormatter = new Intl.NumberFormat("nl-NL", {
+  style: "currency",
+  currency: "EUR",
+  maximumFractionDigits: 0
+});
+
 const calendarWeekdays = ["ma", "di", "wo", "do", "vr", "za", "zo"];
 const calendarDayMs = 24 * 60 * 60 * 1000;
 const calendarMonthFormatter = new Intl.DateTimeFormat("nl-NL", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -344,10 +351,10 @@ function normaliseGoogleSheetRows(payload) {
 
 function parseAvailabilityBlocks(rows) {
   return rows.map((row) => {
-    const unit = String(row.unit || "").trim().toLowerCase();
-    const status = String(row.status || "").trim().toLowerCase();
-    const startDay = datePartsToDayNumber(parseAvailabilityDate(row.start_date));
-    const endDay = datePartsToDayNumber(parseAvailabilityDate(row.end_date));
+    const unit = normaliseUnit(row.unit || row.verblijf || row.accommodatie);
+    const status = normaliseAvailabilityStatus(row.status);
+    const startDay = datePartsToDayNumber(parseAvailabilityDate(row.start_date || row.startdatum || row.start_datum || row.aankomst));
+    const endDay = datePartsToDayNumber(parseAvailabilityDate(row.end_date || row.einddatum || row.eind_datum || row.vertrek));
 
     if (!availabilityUnits[unit] || !availabilityStatusLabels[status] || startDay === null || endDay === null || endDay <= startDay) {
       return null;
@@ -357,7 +364,7 @@ function parseAvailabilityBlocks(rows) {
   }).filter(Boolean);
 }
 
-function loadGoogleSheet(sheetId) {
+function loadGoogleSheet(sheetId, options = {}) {
   return new Promise((resolve, reject) => {
     const callbackName = `availabilitySheet${Date.now()}${Math.random().toString(36).slice(2)}`;
     const script = document.createElement("script");
@@ -374,6 +381,10 @@ function loadGoogleSheet(sheetId) {
 
     window[callbackName] = (payload) => {
       cleanup();
+      if (payload?.status === "error" || payload?.errors?.length) {
+        reject(new Error("Sheet returned an error"));
+        return;
+      }
       resolve(payload);
     };
 
@@ -383,14 +394,161 @@ function loadGoogleSheet(sheetId) {
     };
 
     const params = new URLSearchParams({
-      gid: "0",
       headers: "1",
       tqx: `out:json;responseHandler:${callbackName}`
     });
 
+    if (options.sheetName) {
+      params.set("sheet", options.sheetName);
+    } else {
+      params.set("gid", options.gid || "0");
+    }
+
     script.src = `https://docs.google.com/spreadsheets/d/${encodeURIComponent(sheetId)}/gviz/tq?${params.toString()}`;
     document.head.append(script);
   });
+}
+
+async function loadGoogleSheetFallback(sheetId, optionList) {
+  let lastError = null;
+
+  for (const options of optionList) {
+    try {
+      return await loadGoogleSheet(sheetId, options);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("Sheet request failed");
+}
+
+function parsePrice(value) {
+  if (typeof value === "number") return Number.isFinite(value) ? value : null;
+
+  const priceText = String(value || "").replace(/[^\d,.-]/g, "");
+  if (!priceText) return null;
+
+  const lastComma = priceText.lastIndexOf(",");
+  const lastDot = priceText.lastIndexOf(".");
+  let normalised = priceText;
+
+  if (lastComma > -1 && lastDot > -1) {
+    const decimalSeparator = lastComma > lastDot ? "," : ".";
+    const thousandsSeparator = decimalSeparator === "," ? "." : ",";
+    normalised = priceText
+      .replace(new RegExp(`\\${thousandsSeparator}`, "g"), "")
+      .replace(decimalSeparator, ".");
+  } else if (/^-?\d{1,3}([.,]\d{3})+$/.test(priceText)) {
+    normalised = priceText.replace(/[.,]/g, "");
+  } else {
+    normalised = priceText.replace(",", ".");
+  }
+
+  const parsed = Number(normalised);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function normaliseUnit(value) {
+  const unit = String(value || "").trim().toLowerCase();
+  const aliases = {
+    casa: "casa",
+    "casa dei cigni": "casa",
+    casetta: "casetta",
+    "la casetta": "casetta"
+  };
+  return aliases[unit] || unit;
+}
+
+function normaliseAvailabilityStatus(value) {
+  const status = String(value || "").trim().toLowerCase();
+  const aliases = {
+    available: "available",
+    beschikbaar: "available",
+    booked: "booked",
+    geboekt: "booked",
+    bezet: "booked",
+    option: "option",
+    optie: "option",
+    closed: "closed",
+    gesloten: "closed",
+    onderhoud: "closed"
+  };
+  return aliases[status] || status;
+}
+
+function parsePricingRows(rows) {
+  return rows.map((row, index) => {
+    const unit = normaliseUnit(row.unit || row.verblijf || row.accommodatie);
+    const period = String(row.period || row.periode || "").trim();
+    const price = parsePrice(row.price_per_week || row.prijs_per_week || row.prijs);
+    const sortOrder = Number(row.sort_order || row.volgorde || row.sortering || index + 1);
+
+    if (!availabilityUnits[unit] || !period || price === null) return null;
+
+    return {
+      unit,
+      period,
+      price,
+      sortOrder: Number.isFinite(sortOrder) ? sortOrder : index + 1
+    };
+  }).filter(Boolean);
+}
+
+function renderPricingRows(rows) {
+  if (!pricingTable || !rows.length) return;
+
+  pricingTable.querySelectorAll("[data-pricing-unit]").forEach((tableBody) => {
+    const unit = tableBody.dataset.pricingUnit;
+    const unitRows = rows
+      .filter((row) => row.unit === unit)
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+
+    if (!unitRows.length) return;
+
+    tableBody.innerHTML = "";
+    unitRows.forEach((row) => {
+      const tr = document.createElement("tr");
+      const period = document.createElement("td");
+      const price = document.createElement("td");
+
+      period.textContent = row.period;
+      price.textContent = priceFormatter.format(row.price);
+
+      tr.append(period, price);
+      tableBody.append(tr);
+    });
+  });
+}
+
+function initPricingTables() {
+  if (!pricingTable) return;
+
+  const sheetId = pricingTable.dataset.pricingSheetId;
+  if (!sheetId) return;
+
+  const sources = [
+    { sheetName: pricingTable.dataset.pricingSheetName || "Prijzen" },
+    { sheetName: "Pricing" }
+  ];
+
+  (async () => {
+    for (const source of sources) {
+      try {
+        const payload = await loadGoogleSheet(sheetId, source);
+        const rows = parsePricingRows(normaliseGoogleSheetRows(payload));
+        if (rows.length) {
+          renderPricingRows(rows);
+          return;
+        }
+      } catch (error) {
+        // Probeer de volgende bekende tabnaam.
+      }
+    }
+  })()
+    .catch(() => {
+      // Houd de vaste prijzen in de HTML zichtbaar als de sheet nog niet beschikbaar is.
+    });
 }
 
 function statusForDay(blocks, unit, day) {
@@ -540,7 +698,11 @@ function initAvailabilityCalendar() {
     return;
   }
 
-  loadGoogleSheet(sheetId)
+  loadGoogleSheetFallback(sheetId, [
+    { sheetName: availabilityCalendar.dataset.availabilitySheetName || "Beschikbaarheid" },
+    { sheetName: "Availability" },
+    { gid: "0" }
+  ])
     .then((payload) => {
       state.blocks = parseAvailabilityBlocks(normaliseGoogleSheetRows(payload));
       render();
@@ -551,6 +713,7 @@ function initAvailabilityCalendar() {
     });
 }
 
+initPricingTables();
 initAvailabilityCalendar();
 
 const weatherWidget = document.querySelector("[data-weather-widget]");
