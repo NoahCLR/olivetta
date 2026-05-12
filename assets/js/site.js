@@ -10,6 +10,11 @@ if (navToggle && siteNav) {
 
 const pad = (number) => String(number).padStart(2, "0");
 const photoTextPath = "/assets/data/photo-alt-texts.json";
+const imageCacheVersion = "20260512-images";
+
+function versionAsset(src) {
+  return src.includes("?") ? `${src}&v=${imageCacheVersion}` : `${src}?v=${imageCacheVersion}`;
+}
 
 const galleryConfig = {
   casa: {
@@ -119,14 +124,14 @@ function renderGalleries() {
 
     visibleItems.forEach((item, index) => {
       const link = document.createElement("a");
-      link.href = item.src;
+      link.href = versionAsset(item.src);
       link.dataset.galleryName = name;
       link.dataset.galleryIndex = String(index);
       link.dataset.caption = item.caption;
       link.setAttribute("aria-label", item.caption);
 
       const image = document.createElement("img");
-      image.src = item.src;
+      image.src = versionAsset(item.src);
       image.alt = item.alt;
       image.loading = "lazy";
       image.decoding = "async";
@@ -169,7 +174,7 @@ function showLightbox(galleryName, index) {
   activeGalleryName = galleryName;
   activeIndex = index;
   const item = items[index];
-  lightboxImage.src = item.src;
+  lightboxImage.src = versionAsset(item.src);
   lightboxImage.alt = item.alt;
   lightboxCaption.textContent = item.caption;
   lightbox.classList.add("is-open");
@@ -484,7 +489,7 @@ function initAvailabilityCalendar() {
 
     if (yearLabel) yearLabel.textContent = String(state.activeYear);
     if (unitImage) {
-      unitImage.src = config?.image || "";
+      unitImage.src = config?.image ? versionAsset(config.image) : "";
       unitImage.alt = config?.imageAlt || "";
     }
     if (unitTitle) unitTitle.textContent = config?.label || "";
