@@ -207,8 +207,10 @@ h3 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
   line-height: 1.08;
-  hyphens: auto;
-  overflow-wrap: break-word;
+  hyphens: none;
+  overflow-wrap: normal;
+  text-wrap: balance;
+  word-break: normal;
 }
 
 h1 {
