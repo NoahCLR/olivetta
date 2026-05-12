@@ -910,32 +910,39 @@ h3 {
 
 .availability-request {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, auto);
-  gap: 16px 22px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "dates actions"
+    "message actions";
+  gap: 8px 18px;
   align-items: center;
-  padding: 18px;
+  padding: 14px 16px;
   border: 1px solid var(--line);
+  border-left: 4px solid var(--cypress);
   border-radius: var(--radius);
-  background: #fffdf8;
+  background: #f8fbf4;
 }
 
 .availability-request-dates {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-area: dates;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
 }
 
 .availability-request-dates div {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
   min-width: 0;
-  padding: 13px 14px;
-  border: 1px solid rgba(31, 58, 47, 0.13);
-  border-radius: 8px;
-  background: var(--paper);
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .availability-request-dates span {
   display: block;
-  margin-bottom: 6px;
+  margin: 0;
   color: var(--muted);
   font-size: 0.75rem;
   font-weight: 900;
@@ -945,27 +952,38 @@ h3 {
 .availability-request-dates strong {
   display: block;
   color: var(--cypress);
-  font-size: 0.98rem;
+  font-size: 1rem;
   line-height: 1.25;
 }
 
 .availability-request p {
-  grid-column: 1 / -1;
+  grid-area: message;
   margin: 0;
   color: var(--muted);
-  font-size: 0.94rem;
+  font-size: 0.9rem;
 }
 
 .availability-request-actions {
+  grid-area: actions;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
 }
 
+.availability-request .button {
+  min-height: 42px;
+  padding: 0 16px;
+}
+
+.availability-request .button.is-disabled,
+.availability-request .availability-clear:disabled {
+  display: none;
+}
+
 .availability-clear {
-  min-height: 48px;
-  padding: 0 14px;
+  min-height: 42px;
+  padding: 0 8px;
   border: 0;
   background: transparent;
   color: var(--cypress);
@@ -1603,22 +1621,30 @@ button.calendar-day:hover {
   }
 
   .availability-request {
+    grid-template-areas:
+      "dates"
+      "message"
+      "actions";
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 10px;
     padding: 14px;
   }
 
   .availability-request-dates {
-    grid-template-columns: 1fr;
+    display: grid;
+    gap: 8px;
   }
 
   .availability-request-actions {
-    justify-content: stretch;
+    justify-content: flex-start;
   }
 
-  .availability-request-actions .button,
+  .availability-request-actions .button {
+    width: auto;
+  }
+
   .availability-clear {
-    width: 100%;
+    width: auto;
   }
 
   .availability-controls {

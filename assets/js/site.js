@@ -761,7 +761,7 @@ function initAvailabilityCalendar() {
       selectionMessage.textContent = state.notice;
     } else if (hasStart && hasEnd) {
       const nights = state.selection.endDay - state.selection.startDay;
-      selectionMessage.textContent = `Geselecteerde periode: ${nights} nachten. De aanvraag wordt per e-mail bevestigd.`;
+      selectionMessage.textContent = `Geselecteerde periode: ${nights} nachten. Wanneer u deze periode aanvraagt, nemen wij persoonlijk contact met u op om de beschikbaarheid te bevestigen en eventuele vragen te beantwoorden.`;
     } else if (hasStart) {
       selectionMessage.textContent = "Aankomst gekozen. Kies een latere zaterdag als vertrek; meerdere weken kan ook.";
     } else {
