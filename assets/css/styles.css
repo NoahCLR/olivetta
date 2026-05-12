@@ -1430,20 +1430,25 @@ h3 {
   }
 
   .availability {
+    gap: 16px;
     padding: 16px;
   }
 
   .availability-stay {
     grid-template-columns: 1fr;
+    gap: 0;
   }
 
   .availability-stay img {
-    min-height: 230px;
+    height: auto;
+    min-height: 0;
     aspect-ratio: 16 / 10;
   }
 
   .availability-stay-copy {
-    padding: 0 18px 20px;
+    align-content: start;
+    padding: 18px;
+    background: var(--paper);
   }
 
   .availability-controls {
@@ -1472,6 +1477,31 @@ h3 {
 
   .availability-legend {
     justify-content: flex-start;
+  }
+
+  .calendar-month {
+    padding: 14px;
+  }
+
+  .calendar-month header {
+    align-items: flex-start;
+    gap: 6px 10px;
+  }
+
+  .calendar-month header span {
+    margin-left: auto;
+    line-height: 1.2;
+    text-align: right;
+  }
+
+  .calendar-weekdays,
+  .calendar-days {
+    gap: 3px;
+  }
+
+  .calendar-day {
+    border-radius: 5px;
+    font-size: 0.8rem;
   }
 
   .detail-grid,
@@ -1508,5 +1538,17 @@ h3 {
   .lightbox-next {
     top: auto;
     bottom: 74px;
+  }
+}
+
+@media (max-width: 380px) {
+  .calendar-month header {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-month header span {
+    margin-left: 0;
+    text-align: left;
   }
 }
