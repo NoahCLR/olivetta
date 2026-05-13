@@ -219,7 +219,7 @@ const availabilityCalendar = document.querySelector("[data-availability-calendar
 const availabilityUnits = {
   casa: {
     label: "Casa dei Cigni",
-    summary: "Vrijstaand huis voor maximaal 5-6 personen, te huur van april t/m oktober.",
+    summary: "Vrijstaand huis voor maximaal 6 personen, te huur van april t/m oktober.",
     image: "/assets/images/casa/casa-lead.webp",
     imageAlt: "Casa dei Cigni met natuurstenen gevel en terras",
     seasonStartMonth: 3,
@@ -761,7 +761,7 @@ function initAvailabilityCalendar() {
       selectionMessage.textContent = state.notice;
     } else if (hasStart && hasEnd) {
       const nights = state.selection.endDay - state.selection.startDay;
-      selectionMessage.textContent = `Geselecteerde periode: ${nights} nachten. Wanneer u deze periode aanvraagt, nemen wij persoonlijk contact met u op om de beschikbaarheid te bevestigen en eventuele vragen te beantwoorden.`;
+      selectionMessage.textContent = `Geselecteerde periode: ${nights} nachten. Wanneer je deze periode aanvraagt, nemen we persoonlijk contact met je op om de beschikbaarheid te bevestigen en eventuele vragen te beantwoorden.`;
     } else if (hasStart) {
       selectionMessage.textContent = "Aankomst gekozen. Kies een latere zaterdag als vertrek; meerdere weken kan ook.";
     } else {
@@ -797,7 +797,7 @@ function initAvailabilityCalendar() {
 
     if (state.selection.startDay === null || state.selection.endDay !== null || day < state.selection.startDay) {
       if (statusForSelectedDay !== "available") {
-        state.notice = "Kies een groene zaterdag als aankomst.";
+        state.notice = "Kies een beschikbare zaterdag als aankomst.";
         updateSelectionPanel();
         return;
       }

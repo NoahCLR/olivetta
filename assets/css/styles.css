@@ -433,6 +433,24 @@ h3 {
   object-fit: cover;
 }
 
+.section-photo {
+  overflow: hidden;
+  margin: 0 0 22px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.section-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+}
+
+.layout-photo img {
+  object-position: center 56%;
+}
+
 .split-cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1206,7 +1224,12 @@ button.calendar-day:hover {
   align-items: stretch;
 }
 
+.map-layout > div {
+  order: 2;
+}
+
 .map-frame {
+  order: 1;
   min-height: 460px;
   border: 0;
   border-radius: var(--radius);
@@ -1522,6 +1545,15 @@ button.calendar-day:hover {
     grid-template-columns: 1fr;
   }
 
+  .map-layout > div {
+    order: 1;
+  }
+
+  .map-frame {
+    order: 2;
+    min-height: 360px;
+  }
+
   .detail-grid,
   .home-place-grid,
   .amenities {
@@ -1611,6 +1643,10 @@ button.calendar-day:hover {
 
   .image-panel img {
     min-height: 300px;
+  }
+
+  .section-photo img {
+    aspect-ratio: 4 / 3;
   }
 
   .price-card header {
