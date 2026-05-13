@@ -2,6 +2,28 @@
 
 This site is static HTML/CSS/JS, so the container only needs Nginx.
 
+The public webroot is `public/`. Project support files such as `AGENTS.md`, `deploy/`, and `docs/` are not copied into the Nginx image.
+
+Repository layout:
+
+```text
+.
+├── AGENTS.md
+├── public/
+│   ├── index.html
+│   ├── assets/
+│   ├── robots.txt
+│   └── sitemap.xml
+├── deploy/
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── nginx.conf
+└── docs/
+    └── google-sheet-import/
+```
+
+The live URLs do not include `/public`; Nginx serves the contents of `public/` as the site root.
+
 ## Portainer Git stack
 
 In Portainer, create a new stack from Git:
@@ -33,6 +55,14 @@ services:
 ```
 
 Deploy the stack. Portainer will clone the repo, build the Nginx image, and start the site container as `casa-dei-cigni-site`.
+
+The Compose path remains:
+
+```text
+deploy/docker-compose.yml
+```
+
+No Cloudflare hostname or tunnel target changes are needed when editing files under `public/`.
 
 ## Cloudflare Tunnel target
 
@@ -95,3 +125,18 @@ docker compose -f deploy/docker-compose.yml up -d --build
 ```
 
 For automatic updates, enable Portainer's Git/webhook redeploy option if available in your Portainer setup.
+
+## Local preview
+
+For a plain local preview, serve the `public/` directory:
+
+```sh
+cd public
+python3 -m http.server 4188
+```
+
+Open:
+
+```text
+http://127.0.0.1:4188/
+```
