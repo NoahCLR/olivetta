@@ -720,22 +720,31 @@ h3 {
   opacity: 0.72;
 }
 
-.amenities {
+.amenity-groups {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
   margin: 32px 0 0;
-  padding: 0;
-  list-style: none;
 }
 
-.amenities li {
-  min-height: 76px;
-  padding: 16px;
+.amenity-group {
+  min-height: 118px;
+  padding: 18px;
   border-radius: var(--radius);
   background: #fffaf1;
+  border: 1px solid rgba(79, 115, 144, 0.14);
+}
+
+.amenity-group h3 {
+  margin: 0 0 8px;
   color: var(--cypress);
-  font-weight: 800;
+  font-size: 1rem;
+}
+
+.amenity-group p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .gallery-grid {
@@ -1586,7 +1595,7 @@ button.calendar-day:hover {
 
   .detail-grid,
   .home-place-grid,
-  .amenities {
+  .amenity-groups {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1678,6 +1687,10 @@ button.calendar-day:hover {
 
   .section-photo img {
     aspect-ratio: 4 / 3;
+  }
+
+  .amenity-groups {
+    grid-template-columns: 1fr;
   }
 
   .price-card header {
@@ -1808,7 +1821,7 @@ button.calendar-day:hover {
 
   .detail-grid,
   .home-place-grid,
-  .amenities,
+  .amenity-groups,
   .gallery-grid,
   .weather-days,
   .calendar-months,
