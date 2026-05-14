@@ -41,17 +41,17 @@ The stack uses the existing external Docker network:
 
 ```yaml
 networks:
-  ncleroy-net:
+  olivetta-net:
     external: true
 ```
 
-Your existing Cloudflare tunnel container is already expected to be attached to that network:
+The dedicated Cloudflare tunnel container is expected to be attached to that network:
 
 ```yaml
 services:
   cloudflared:
     image: cloudflare/cloudflared:latest
-    container_name: cloudflared-ncleroy-net
+    container_name: cloudflared-olivetta-net
 ```
 
 Deploy the stack. Portainer will clone the repo, build the Nginx image, and start the site container as `casa-dei-cigni-site`.
@@ -76,19 +76,19 @@ If you configure `cloudflared` with YAML, the ingress entry looks like this:
 
 ```yaml
 ingress:
-  - hostname: your-domain.example
+  - hostname: casadeicigni-olivetta.com
     service: http://casa-dei-cigni-site:80
   - service: http_status:404
 ```
 
-Because both containers are on `ncleroy-net`, the tunnel can resolve the site by container name.
+Because both containers are on `olivetta-net`, the tunnel can resolve the site by container name.
 
 ## If cloudflared is not on the same Docker network
 
 Attach the tunnel container to the network:
 
 ```sh
-docker network connect ncleroy-net cloudflared-ncleroy-net
+docker network connect olivetta-net cloudflared-olivetta-net
 ```
 
 If you cannot use a shared Docker network, uncomment the `ports` section in `docker-compose.yml`:

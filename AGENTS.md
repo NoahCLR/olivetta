@@ -62,7 +62,7 @@ These were explicit client preferences. Do not undo them without a new explicit 
 - Cross-links between Casa and La Casetta should stay friendly, warm, and placed before the gallery sections.
 - Green callout areas should be inset rounded panels, not full-width green bands.
 - Buttons on green panels should use the warm terracotta/orange color used in the footer.
-- The current production domain in metadata is `https://olivetta.ncleroy.dev/`.
+- The current production domain in metadata is `https://casadeicigni-olivetta.com/`.
 
 ## Design System
 
@@ -263,7 +263,7 @@ When changing the production domain:
 5. Update `public/sitemap.xml`.
 6. Update `public/robots.txt`.
 7. Search for the old domain:
-   - `rg -n "olivetta\\.ncleroy\\.dev|https://" public`
+   - `rg -n "casadeicigni-olivetta\\.com|https://" public`
 
 Sitemap rules:
 
@@ -310,7 +310,8 @@ Current intended setup:
 
 - Static Nginx container.
 - Portainer Git stack.
-- Existing external Docker network: `ncleroy-net`.
+- Existing external Docker network: `olivetta-net`.
+- Dedicated Cloudflare Tunnel container: `cloudflared-olivetta-net`.
 - Cloudflare Tunnel points to `http://casa-dei-cigni-site:80`.
 - `deploy/Dockerfile` copies `public/` into the Nginx webroot.
 - Root-level project files such as `AGENTS.md`, `deploy/`, and docs should not be served publicly.
@@ -347,8 +348,8 @@ After deployment:
 
 1. Check the live page in a private/incognito window.
 2. View source or inspect network requests to confirm the new CSS/JS query string is used.
-3. Check `https://olivetta.ncleroy.dev/sitemap.xml`.
-4. Check `https://olivetta.ncleroy.dev/robots.txt`.
+3. Check `https://casadeicigni-olivetta.com/sitemap.xml`.
+4. Check `https://casadeicigni-olivetta.com/robots.txt`.
 
 ## Local Development And Verification
 
@@ -391,7 +392,7 @@ Useful commands:
 
 ```sh
 rg -n "styles.css\\?v=|site.js\\?v=" public
-rg -n "canonical|og:url|https://olivetta.ncleroy.dev" public/*.html public/*/index.html
+rg -n "canonical|og:url|https://casadeicigni-olivetta.com" public/*.html public/*/index.html
 xmllint --noout public/sitemap.xml
 ```
 

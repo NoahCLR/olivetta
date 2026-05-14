@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://olivetta.ncleroy.dev/sitemap.xml
+Sitemap: https://casadeicigni-olivetta.com/sitemap.xml
