@@ -64,6 +64,16 @@ deploy/docker-compose.yml
 
 No Cloudflare hostname or tunnel target changes are needed when editing files under `public/`.
 
+## Container hardening
+
+The site container runs the static Nginx service with a read-only root filesystem, as the unprivileged `nginx` user from the image. Temporary write locations for Nginx cache, PID, and temp files are provided as in-memory `tmpfs` mounts.
+
+Linux capabilities are dropped by default. Only `NET_BIND_SERVICE` is added back so Nginx can keep listening on port 80, matching the Cloudflare Tunnel target:
+
+```text
+http://casa-dei-cigni-site:80
+```
+
 ## Cloudflare Tunnel target
 
 In Cloudflare Zero Trust, set the public hostname service to:
